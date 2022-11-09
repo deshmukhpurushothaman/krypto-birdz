@@ -70,9 +70,6 @@ module.exports = {
       network_id: '*', // Any network (default: none)
     },
 
-    // contracts_directory = "./src/contracts" - specify where solidity files are prsent
-    // contracts_build_directory = "./src/abis" - specify where the abi's should be produced
-
     //
     // An additional network, but with some advanced options…
     // advanced: {
@@ -101,6 +98,9 @@ module.exports = {
     //   production: true    // Treats this network as if it was a public net. (default: false)
     // }
   },
+
+  // contracts_directory = "./src/contracts" - specify where solidity files are prsent
+  // contracts_build_directory = "./src/abis" - specify where the abi's should be produced
 
   // Set default mocha options here, use special reporters, etc.
   mocha: {
