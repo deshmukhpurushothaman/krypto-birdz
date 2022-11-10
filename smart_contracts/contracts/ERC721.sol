@@ -22,6 +22,25 @@ contract ERC721 {
         uint256 indexed tokenId
     );
 
+    // Returns the number of tokens or NFT's owned by the address/owner
+    function balanceOf(address _owner) public view returns (uint256) {
+        require(
+            _owner != address(0),
+            "ERC721: balanceOf owner query for non-existent token"
+        );
+        return _OwnerTokenCount[_owner];
+    }
+
+    // Returns the owner of the tokenId
+    function ownerOf(uint256 _tokenId) public view returns (address) {
+        address owner = _tokenOwner[_tokenId];
+        require(
+            owner != address(0),
+            "ERC721: ownerOf owner query for non-existent token"
+        );
+        return owner;
+    }
+
     // Check if a NFT was already minted
     function _exists(uint256 tokenId) internal view returns (bool) {
         address owner = _tokenOwner[tokenId]; // fetching token owner for the provided tokenid
@@ -29,7 +48,8 @@ contract ERC721 {
     }
 
     // Mint new NFT's or tokens
-    function _mint(address to, uint256 tokenId) internal {
+    function _mint(address to, uint256 tokenId) internal virtual {
+        // virtual - method that is going to be overridden
         require(to != address(0), "ERC721: Minting to the zero address");
         require(!_exists(tokenId), "ERC721: Token id already exists");
 
