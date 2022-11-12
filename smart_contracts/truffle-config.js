@@ -45,6 +45,9 @@
 // const { MNEMONIC, PROJECT_ID } = process.env;
 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
+require('ts-node').register({
+  files: true,
+});
 
 module.exports = {
   /**
