@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./ERC165.sol";
 import "./interfaces/IERC721.sol";
+import "./libraries/Counters.sol";
 
 /**
  * TO build minting function:
@@ -14,10 +15,12 @@ import "./interfaces/IERC721.sol";
  */
 
 contract ERC721 is ERC165, IERC721 {
+    using SafeMath for uint256;
+    using Counters for Counters.Counter;
     // Variables
     mapping(uint256 => address) private _tokenOwner; // Map tokenId to owner address
-    mapping(address => uint256) private _OwnerTokenCount; // Map number of tokens owned by each user/address
-    mapping(address => uint256) private _ownedTokensCount;
+    mapping(address => Counters.Counter) private _OwnerTokenCount; // Map number of tokens owned by each user/address
+    mapping(address => Counters.Counter) private _ownedTokensCount;
     mapping(uint256 => address) private _tokenApprovals;
 
     constructor() {
@@ -34,7 +37,7 @@ contract ERC721 is ERC165, IERC721 {
             _owner != address(0),
             "ERC721: balanceOf owner query for non-existent token"
         );
-        return _OwnerTokenCount[_owner];
+        return _OwnerTokenCount[_owner].current();
     }
 
     // Returns the owner of the tokenId
@@ -60,7 +63,7 @@ contract ERC721 is ERC165, IERC721 {
         require(!_exists(tokenId), "ERC721: Token id already exists");
 
         _tokenOwner[tokenId] = to; // Mapping address to tokenId
-        _OwnerTokenCount[to] += 1; // Mapping number of tokens to address
+        _OwnerTokenCount[to].increment(); // Mapping number of tokens to address
         emit Transfer(address(0), to, tokenId);
     }
 
@@ -74,8 +77,8 @@ contract ERC721 is ERC165, IERC721 {
             ownerOf(_tokenId) == _from,
             "ERC721: Trying to tranfer a token with address code"
         );
-        _ownedTokensCount[_from] -= 1;
-        _ownedTokensCount[_from] += 1;
+        _ownedTokensCount[_from].decrement();
+        _ownedTokensCount[_from].increment();
         _tokenOwner[_tokenId] = _to;
         emit Transfer(_from, _to, _tokenId);
     }
